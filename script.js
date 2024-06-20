@@ -173,7 +173,7 @@ function ready(){
         input.addEventListener("change", quantityChanged);
     }
     //add to cart
-var addCart = document.getElementsByClassName('add-cart')
+var addCart = document.getElementsByClassName("add-cart");
 for (var i = 0; i < addCart.length; i++) {
     var button = addCart[i];
     button.addEventListener("click", addCartClicked);
@@ -204,14 +204,133 @@ function quantityChanged(event) {
 } 
 
 
-
-//add to cart
-function addCartClicked(event){
+// Функція, яка буде викликатися при кліку на кнопку "Add to Cart"
+function addCartClicked(event) {
     var button = event.target;
-    var shopProducts = button.parentElement;
-    var title = shopProducts.getElementsByClassName("product-title")[0].innerText;
-    console.log(title);
+    var shopProduct = button.closest('.item'); // Пошук найближчого батьківського елементу з класом item
+    var titleElement = shopProduct.querySelector(".product-title"); // Пошук елементу з класом product-title всередині елемента товару
+    var currentElement = shopProduct.querySelector(".current"); // Пошук елементу з класом current всередині елемента товару
+    
+    if (titleElement && currentElement) {
+        var title = titleElement.innerText;
+        var current = currentElement.innerText;
+        
+        // Виведення назви товару і поточного значення в консоль
+        console.log('Title:', title);
+        console.log('Current Price:', current);
+        
+        // Тут можна додати додатковий код для додавання товару в кошик або інші дії
+        var numberDisplay = document.getElementById('numberDisplay');
+        
+        // Отримання поточного значення числа і перетворення його у ціле число
+        var currentNumber = parseInt(numberDisplay.innerText);
+        
+        // Збільшення числа на одиницю
+        currentNumber++;
+        
+        // Оновлення вмісту елемента відображення числа в кошику
+        numberDisplay.innerText = currentNumber;
+    } else {
+        console.error('Product title or current price element not found');
+    }
 }
+
+// Отримання всіх кнопок "Add to Cart" і додавання до них обробника події
+var addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+addToCartButtons.forEach(function(button) {
+    button.addEventListener('click', addCartClicked);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Функція для зміни значення в полі введення
+    function updateQuantity(event, delta) {
+        var button = event.currentTarget; // Отримуємо кнопку, на яку натиснули
+        var parentDiv = button.closest('.qty-control'); // Отримуємо найближчий батьківський елемент з класом 'qty-control'
+        var quantityInput = parentDiv.querySelector('.quantity-input'); // Знаходимо поле введення в межах батьківського елемента
+
+        if (quantityInput) {
+            var currentValue = parseInt(quantityInput.value); // Отримуємо поточне значення поля введення і перетворюємо його в число
+            var newValue = currentValue + delta;
+
+            // Перевірка на мінімальне значення (1)
+            if (newValue >= 1) {
+                quantityInput.value = newValue; // Встановлюємо нове значення в поле введення
+            } else {
+                console.error('Quantity cannot be less than 1');
+            }
+        } else {
+            console.error('Quantity input element not found');
+        }
+    }
+
+    // Отримуємо всі кнопки "+" та "-" і додаємо обробники подій
+    var plusButtons = document.querySelectorAll('.plus');
+    var minusButtons = document.querySelectorAll('.minus');
+
+    plusButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            updateQuantity(event, 1); // Збільшуємо значення на 1
+        });
+    });
+
+    minusButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            updateQuantity(event, -1); // Зменшуємо значення на 1
+        });
+    });
+});
+
+
+
+
+
+
+
+        
+
+function addProductToCart(title, current) {
+    var cartShopBox = document.createElement("div");
+    cartShopBox.classList.add('cart-box');
+    var cartItems = document.getElementsByClassName("products one")[0]
+    var cartItemsNames = cartItems.getElementsByClassName('product-title')
+    for (var i = 0; i < cartItemsNames.length; i++){
+        if (cartItemsNames[i].innerText == title){
+
+        return;
+    }
+}
+
+
+
+
+var cartBoxContent = `
+                 <img src="assets/products/gigabity1.png" alt="" class="cart-img">
+                 <div class="detail-box">
+                  <div class="cart-product-title">GIGABYTE GeForce RTX4070 SUPER 12Gb EAGLE OC ICE</div>
+                  <div class="cart-price">₴7698</div>
+                  <input type="number" value="1" class="cart-quantity">
+                 </div>
+                 <!-- remove -->
+                 <i class="ri-drinks-line cart-remove"></i>
+`;
+cartShopBox.innerText = cartBoxContent;
+cartItems.append(cartShopBox);
+cartShopBox.getElementsByClassName('cart-remove')[0].addEventListener('click', removeCartItem);
+cartShopBox.getElementsByClassName('cart-quantity')[0].addEventListener('change', quantityChanged);
+
+}
+
 
 
 
